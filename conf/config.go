@@ -8,7 +8,14 @@ import (
 
 //ConfigOption contains config of the server
 type ConfigOption struct {
-	Addr string
+	Addr     string
+	DBConfig struct {
+		Host     string `json:"host"`
+		Port     string `json:"port"`
+		User     string `json:"user"`
+		Password string `json:"password"`
+		DBName   string `json:"db_name"`
+	} `json:"db_config"`
 }
 
 var (

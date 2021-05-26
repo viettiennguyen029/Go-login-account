@@ -3,6 +3,9 @@ package app
 import (
 	"encoding/json"
 	"net/http"
+	"time"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 //JSendJSON ...
@@ -84,4 +87,22 @@ func (builder *JSendJSONBuilder) Build() *JSendJSON {
 //NewJSendJSONBuilder ...
 func NewJSendJSONBuilder() IJSendJSONBuilder {
 	return &JSendJSONBuilder{}
+}
+
+type JWTCustomClaims struct {
+	Address string
+	jwt.StandardClaims
+}
+
+// Generate JWT token
+func genertateToken(adddress string) (string, error) {
+	customClaim := jwt.StandardClaims{
+		ExpiresAt: time.Now().Add(time.Hour * 72).Unix(),
+	}
+	claims := JWTCustomClaims{
+		Address:        adddress,
+		StandardClaims: customClaim,
+	}
+	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), claims)
+	return token.SignedString([]byte(SECRET_JWT))
 }
